@@ -105,7 +105,7 @@ func newScheduler(opts *SchedulerOpts) *Scheduler {
 		state:             &serverState{value: srvStateNew},
 		heartbeatInterval: heartbeatInterval,
 		logger:            logger,
-		cron:              cron.New(cron.WithLocation(loc)),
+		cron:              cron.New(cron.WithLocation(loc), cron.WithSeconds()),
 		location:          loc,
 		done:              make(chan struct{}),
 		preEnqueueFunc:    opts.PreEnqueueFunc,

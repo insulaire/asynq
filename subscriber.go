@@ -8,9 +8,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/redis/go-redis/v9"
 	"github.com/hibiken/asynq/internal/base"
 	"github.com/hibiken/asynq/internal/log"
+	"github.com/redis/go-redis/v9"
 )
 
 type subscriber struct {
@@ -79,10 +79,12 @@ func (s *subscriber) start(wg *sync.WaitGroup) {
 				pubsub.Close()
 				s.logger.Debug("Subscriber done")
 				return
-			case msg := <-cancelCh:
-				cancel, ok := s.cancelations.Get(msg.Payload)
+			case msg, ok := <-cancelCh:
 				if ok {
-					cancel()
+					cancel, ok := s.cancelations.Get(msg.Payload)
+					if ok {
+						cancel()
+					}
 				}
 			}
 		}
